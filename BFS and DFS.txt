@@ -1,0 +1,54 @@
+from collections import deque
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+# Breadth-First Search (BFS)
+def bfs(start, goal):
+    visited = set()
+    queue = deque([[start]])
+
+    while queue:
+        path = queue.popleft()
+        node = path[-1]
+
+        if node == goal:
+            return path
+
+        elif node not in visited:
+            for neighbor in graph[node]:
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
+            visited.add(node)
+
+    return "No path found"
+
+print("BFS path from A to F:", bfs('A', 'F'))
+
+# Depth-First Search (DFS)
+def dfs(start, goal, path=None, visited=None):
+    if visited is None:
+        visited = set()
+    if path is None:
+        path = [start]
+
+    if start == goal:
+        return path
+
+    visited.add(start)
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            new_path = dfs(neighbor, goal, path + [neighbor], visited)
+            if new_path:
+                return new_path
+
+    return None
+
+print("DFS path from A to F:", dfs('A', 'F'))
